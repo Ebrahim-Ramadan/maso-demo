@@ -86,11 +86,11 @@ class JobQueue {
 
   private cleanupOldJobs() {
     const oneHourAgo = Date.now() - 60 * 60 * 1000
-    for (const [id, job] of this.jobs.entries()) {
+    this.jobs.forEach((job, id) => {
       if (job.createdAt.getTime() < oneHourAgo && job.status !== 'processing') {
         this.jobs.delete(id)
       }
-    }
+    })
   }
 }
 

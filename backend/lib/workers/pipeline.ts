@@ -65,7 +65,7 @@ export type OutgoingEventData =
   | ResultEventData;
 
 class PipelineSingleton {
-  static instance?: Pipeline;
+  static instance?: Awaited<ReturnType<typeof pipeline>>;
 
   static async init(...args: Parameters<typeof pipeline>) {
     this.instance = await pipeline(...args);
@@ -107,7 +107,7 @@ self.addEventListener(
 
         const { id } = event.data;
 
-        const output = await PipelineSingleton.instance(...args);
+        const output = await (PipelineSingleton.instance as any)(...((args as any) || []));
 
         // Classes (ie. `Tensor`) cannot be transferred to the main thread,
         // so we spread its properties into a plain object

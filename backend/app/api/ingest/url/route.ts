@@ -123,7 +123,7 @@ async function splitDocuments(docs: Document[]): Promise<Document[]> {
 async function embedAndStoreDocuments(
   tenantId: string,
   docs: Document[]
-): Promise<{ documentId: string; sectionsCount: number }> {
+): Promise<{ documentId: number; sectionsCount: number }> {
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -133,9 +133,10 @@ async function embedAndStoreDocuments(
   const { data: document, error: docError } = await supabase
     .from('documents')
     .insert({
-      title: docs[0]?.metadata?.title || 'URL Content',
-      source: docs[0]?.metadata?.source || '',
-      content_path: null,
+      // For the demo version we store minimal metadata that matches the
+      // Supabase `documents` table schema defined in `Database`
+      name: docs[0]?.metadata?.title || 'URL Content',
+      storage_object_id: docs[0]?.metadata?.source || '',
       tenant_id: tenantId
     })
     .select('id')
@@ -194,8 +195,8 @@ export async function POST(request: NextRequest) {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { error: 'Missing or invalid authorization header' },
-        { status: 401 },
         {
+          status: 401,
           headers: {
             'Access-Control-Allow-Origin': '*',
           },

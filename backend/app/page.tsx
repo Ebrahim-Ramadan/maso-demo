@@ -3,8 +3,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 export default async function Index() {
-  const cookeStore = await cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookeStore });
+  const supabase = createServerComponentClient({ cookies });
 
   const {
     data: { user },

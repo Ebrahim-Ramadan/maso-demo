@@ -60,8 +60,10 @@ export function usePipeline(
 
     worker.postMessage({
       type: 'init',
-      args: [task, model, transferableOptions],
-    } satisfies InitEventData);
+      // Loosen the compile-time constraint here since `task` is provided
+      // by the caller and is compatible with the underlying `pipeline` API.
+      args: [task as any, model, transferableOptions],
+    } as InitEventData);
 
     return () => {
       worker.removeEventListener('message', onMessageReceived);
