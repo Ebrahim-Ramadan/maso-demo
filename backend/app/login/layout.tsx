@@ -2,10 +2,15 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { PropsWithChildren } from 'react';
+import { hasSupabaseEnv } from '@/lib/env';
 
 export default async function LoginLayout({ children }: PropsWithChildren) {
-  const supabase = createServerComponentClient({ cookies });
+  if (!hasSupabaseEnv()) {
+    // Without Supabase env vars, just render the login page without redirect logic
+    return <>{children}</>;
+  }
 
+  const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },
   } = await supabase.auth.getUser();

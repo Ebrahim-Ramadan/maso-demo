@@ -1,13 +1,16 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { hasSupabaseEnv } from '@/lib/env';
 
 export default async function Index() {
-  const supabase = createServerComponentClient({ cookies });
+  let user: { email?: string | null } | null = null;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (hasSupabaseEnv()) {
+    const supabase = createServerComponentClient({ cookies });
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
   return (
     <div className="w-full flex flex-col items-center">

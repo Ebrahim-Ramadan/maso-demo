@@ -1,6 +1,7 @@
 import LogoutButton from '@/components/LogoutButton';
 import { Toaster } from '@/components/ui/toaster';
 import Providers from '@/lib/providers';
+import { hasSupabaseEnv } from '@/lib/env';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -14,11 +15,13 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const supabase = createServerComponentClient({ cookies });
+  let user: { email?: string | null } | null = null;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (hasSupabaseEnv()) {
+    const supabase = createServerComponentClient({ cookies });
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
   return (
     <html lang="en" className="h-full">
