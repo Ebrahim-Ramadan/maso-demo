@@ -2,33 +2,53 @@
 
 This guide explains how to deploy the backend service to Vercel from this monorepo.
 
-## Quick Setup
+## Quick Setup (Easiest Method)
 
-### Option 1: Using Vercel Dashboard (Recommended)
+### Step 1: Import Repository to Vercel
 
-1. **Import your GitHub repository** to Vercel
-2. **Configure Project Settings**:
-   - **Root Directory**: Set to `backend`
-   - **Framework Preset**: Next.js (auto-detected)
-   - **Build Command**: Leave empty (Vercel will auto-detect)
-   - **Output Directory**: Leave empty (Vercel will auto-detect)
-   - **Install Command**: `cd ../.. && pnpm install` (installs from monorepo root)
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Click **"Add New Project"**
+3. Import your GitHub repository: `usifkamal/WhiteLabel-Ai-Chatbot-Platform-MVP-Demo`
 
-3. **Environment Variables**: Add all required variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `GEMINI_API_KEY` (optional, for embeddings)
-   - `OPENAI_API_KEY` (optional, for chat)
-   - `NEXT_TELEMETRY_DISABLED=1`
+### Step 2: Configure Project Settings
 
-4. **Deploy**: Click "Deploy"
+In the project settings, set:
 
-### Option 2: Using vercel.json (Alternative)
+- **Root Directory**: Leave as `.` (root) - **DO NOT change this**
+- **Framework Preset**: Next.js (auto-detected)
+- **Build Command**: Leave empty (handled by `vercel.json`)
+- **Output Directory**: Leave empty (handled by `vercel.json`)
+- **Install Command**: Leave empty (handled by `vercel.json`)
 
-If you prefer using the root-level `vercel.json`, make sure to:
-- Set Root Directory to `.` (root) in Vercel settings
-- The `vercel.json` will handle the build configuration
+**Important**: The `vercel.json` file in the root already handles everything automatically. You don't need to set any custom commands!
+
+### Step 3: Add Environment Variables
+
+Click **"Environment Variables"** and add:
+
+- `NEXT_PUBLIC_SUPABASE_URL` = your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` = your Supabase anon key
+- `SUPABASE_SERVICE_ROLE_KEY` = your Supabase service role key
+- `GEMINI_API_KEY` = your Gemini API key (optional, for embeddings)
+- `OPENAI_API_KEY` = your OpenAI API key (optional, for chat)
+- `NEXT_TELEMETRY_DISABLED` = `1`
+
+### Step 4: Deploy
+
+Click **"Deploy"** and wait for the build to complete!
+
+---
+
+## Alternative Method (If you prefer manual configuration)
+
+If you want to set Root Directory to `backend` instead:
+
+1. **Root Directory**: Set to `backend`
+2. **Install Command**: `cd .. && pnpm install` (goes up one level to monorepo root)
+3. **Build Command**: Leave empty (auto-detected)
+4. **Output Directory**: Leave empty (auto-detected)
+
+**Note**: The `vercel.json` method above is simpler and recommended.
 
 ## Troubleshooting
 
