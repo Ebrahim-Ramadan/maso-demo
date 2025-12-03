@@ -9,7 +9,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "prepare:vercel": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare_vercel.ps1",
+    "prepare:vercel": "node scripts/prepare_vercel.js",
     "dev": "npm run prepare:vercel && next dev",
     "build": "npm run prepare:vercel && next build",
     "start": "next start",
