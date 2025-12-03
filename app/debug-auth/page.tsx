@@ -5,14 +5,27 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import type { Session } from '@supabase/auth-helpers-nextjs'
 
+// Force dynamic rendering to avoid build-time errors
+export const dynamic = 'force-dynamic'
+
 export default function DebugAuthPage() {
   const [session, setSession] = useState<Session | null>(null)
   const [cookies, setCookies] = useState<string>('')
   const [loading, setLoading] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
-  const supabase = createClientComponentClient()
+  const [supabase, setSupabase] = useState<any>(null)
+  
+  // Initialize Supabase only on client side
+  useEffect(() => {
+    try {
+      setSupabase(createClientComponentClient())
+    } catch (error) {
+      console.error('Failed to initialize Supabase:', error)
+    }
+  }, [])
 
   const loadSession = async () => {
+    if (!supabase) return
     setLoading(true)
     const { data, error } = await supabase.auth.getSession()
     
@@ -31,10 +44,13 @@ export default function DebugAuthPage() {
 
   useEffect(() => {
     setIsMounted(true)
-    loadSession()
-  }, [])
+    if (supabase) {
+      loadSession()
+    }
+  }, [supabase])
 
   const clearAllData = async () => {
+    if (!supabase) return
     // Sign out
     await supabase.auth.signOut()
     

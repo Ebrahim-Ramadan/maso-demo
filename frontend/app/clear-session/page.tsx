@@ -5,12 +5,28 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 
+// Force dynamic rendering to avoid build-time errors
+export const dynamic = 'force-dynamic'
+
 export default function ClearSessionPage() {
   const [status, setStatus] = useState<'idle' | 'clearing' | 'cleared'>('idle')
+  const [supabase, setSupabase] = useState<any>(null)
   const router = useRouter()
-  const supabase = createClientComponentClient()
+  
+  // Initialize Supabase only on client side
+  useEffect(() => {
+    try {
+      setSupabase(createClientComponentClient())
+    } catch (error) {
+      console.error('Failed to initialize Supabase:', error)
+    }
+  }, [])
 
   const clearSession = async () => {
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return
+    }
     setStatus('clearing')
     
     try {
