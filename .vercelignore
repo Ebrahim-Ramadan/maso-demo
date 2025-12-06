@@ -1,0 +1,28 @@
+# Source directories (not needed in production)
+frontend/
+backend/
+crawler/
+docs/
+
+# Development files
+*.md
+!README.md
+.vscode/
+.idea/
+*.log
+.git/
+
+# Test files
+test/
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Documentation
+visual-guide/
+sample-files/
+
+# Scripts (prepare_vercel.js runs during build, then not needed)
+scripts/prepare_vercel.ps1
